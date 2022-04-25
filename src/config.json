@@ -1,13 +1,19 @@
 {
   "providers": {
     "cro": {
-      "rpc": "https://rpc.nebkas.ro"
+      "rpc": "https://rpc.nebkas.ro",
+      "explorerUrl": "https://cronoscan.com/",
+      "coinApiId": "crypto-com-chain"
     },
     "bsc": {
-      "rpc": "https://bsc-dataseed.binance.org"
+      "rpc": "https://bsc-dataseed.binance.org",
+      "explorerUrl": "https://bscscan.com/",
+      "coinApiId": "binancecoin"
     },
     "eth": {
-      "rpc": "https://cloudflare-eth.com"
+      "rpc": "https://cloudflare-eth.com",
+      "explorerUrl": "https://etherscan.io/",
+      "coinApiId": "ethereum"
     }
   }
 }

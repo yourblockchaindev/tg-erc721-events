@@ -25,7 +25,8 @@ class Listener {
         to,
         amount,
         event,
-        JSON.parse(this.collection.chatId)
+        this.collection,
+        this.contract,
       );
     });
     console.log(`Listening for chatId: ${this.collection.chatId}`);
