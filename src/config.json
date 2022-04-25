@@ -1,0 +1,13 @@
+{
+  "providers": {
+    "cro": {
+      "rpc": "https://rpc.nebkas.ro"
+    },
+    "bsc": {
+      "rpc": "https://bsc-dataseed.binance.org"
+    },
+    "eth": {
+      "rpc": "https://cloudflare-eth.com"
+    }
+  }
+}

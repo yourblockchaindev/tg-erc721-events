@@ -1,0 +1,28 @@
+{
+  "name": "tg-erc721-events",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node-fetch": "^2.6.1",
+    "coingecko-api": "^1.0.10",
+    "dotenv": "^16.0.0",
+    "ethers": "^5.6.4",
+    "lowdb": "1.0.0",
+    "node-fetch": "2",
+    "telegram": "^2.6.13"
+  },
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "start": "node --experimental-json-modules dist/index.js",
+    "build": "tsc -p .",
+    "db": "ts-node src/db.ts",
+    "providers": "ts-node src/providers.ts"
+  },
+  "devDependencies": {
+    "@types/coingecko-api": "^1.0.10",
+    "@types/node": "^17.0.25",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3"
+  }
+}
