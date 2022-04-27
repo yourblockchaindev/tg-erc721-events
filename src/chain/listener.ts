@@ -18,12 +18,12 @@ class Listener {
   }
 
   start() {
-    this.contract.on("Transfer", async (from, to, amount, event) => {
+    this.contract.on("Transfer", async (from, to, tokenId, event) => {
       console.log(`New Event: ${event.transactionHash}`);
       await handleTransfer(
         from,
         to,
-        amount,
+        tokenId,
         event,
         this.collection,
         this.contract,

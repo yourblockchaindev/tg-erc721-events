@@ -1,4 +1,4 @@
-import { BigNumber, ethers, Event } from "ethers";
+import { ethers, Event } from "ethers";
 import "dotenv/config";
 import fetch from "node-fetch";
 import CoinGecko from "coingecko-api";
@@ -23,27 +23,31 @@ const currencyFormatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
 });
 
-async function spentString(amount: BigNumber, collection: ICollection) {
+async function coinInfo(collection: ICollection) {
   const coinApiId: string = providers[collection.chain].coinApiId;
 
   const coin = await CoinGeckoClient.coins.fetch(coinApiId, {
     market_data: true,
   });
-  const price = coin.data.market_data.current_price.usd;
-  const spent = parseFloat(ethers.utils.formatEther(amount)) * price;
-  const remainder = amount.mod(1e14);
-  const value = amount.sub(remainder);
-  return `<b>Spent</b>: ${currencyFormatter.format(
-    spent
-  )} (${ethers.utils.formatEther(value)} ${coin.data.symbol})`;
+  const symbol = coin.data.symbol.toUpperCase()
+  const rate = coin.data.market_data.current_price.usd;
+  return { symbol, rate }
 }
 
-function iconString(amount: BigNumber) {
-  let nbIcons = Math.floor(amount.div(BigNumber.from("100")).toNumber()) + 1;
+function spentString(tokenValue: number, usdValue: number, symbol: string) {
+  return [
+    '<b>Spent</b>:',
+    currencyFormatter.format(usdValue),
+    `(${tokenValue.toFixed(2)} ${symbol})`
+  ].join(' ')
+}
+
+function iconString(usdValue: number) {
+  let nbIcons = Math.floor(usdValue/50) + 1;
   return "🦍".repeat(nbIcons);
 }
 
-async function linkString(to: string, event: Event, collection: ICollection) {
+function linkString(to: string, event: Event, collection: ICollection) {
   const explorerUrl: string = providers[collection.chain].explorerUrl;
 
   return [
@@ -64,30 +68,39 @@ function safeUrl(url: string): string {
 export async function handleTransfer(
   from: string,
   to: string,
-  amount: BigNumber,
+  tokenId: number,
   event: Event,
-  // chatId: bigInt.BigInteger,
   collection: ICollection,
   contract: ethers.Contract
 ) {
   try {
-    const tokenId = event.args?.tokenId;
-    console.log(`TokenId: ${tokenId}`)
-    const tokenURI = await contract.tokenURI(tokenId);
-    console.log(`TokenURI: ${tokenURI}`)
+    const tx = await event.getTransaction()
 
+    const tokenURI = await contract.tokenURI(tokenId);
     const tokenUrl = safeUrl(tokenURI)
+
     const response = await fetch(tokenUrl)
     const data: ITokenData = await response.json()
+    const imageUrl = safeUrl(data.image)
+
+    const { symbol, rate } = await coinInfo(collection)
+    
+    const tokenValue = Number(ethers.utils.formatEther(tx.value))
+    const usdValue = tokenValue * rate
 
     const message = [
       `<b>Transfer: ${data.name}!</b>`,
-      iconString(amount),
-      await spentString(amount, collection),
-      await linkString(to, event, collection),
+      iconString(usdValue),
+      spentString(tokenValue, usdValue, symbol),
+      linkString(to, event, collection),
+      `<b>${symbol} Price:</b> ${currencyFormatter.format(rate)}`
     ].join("\n");
 
-    await sendMedia(collection.chatId, message, safeUrl(data.image));
+    await sendMedia(collection.chatId, message, imageUrl);
+
+    if (process.env.DEMO_CHAT_ID !== undefined && collection.chatId !== process.env.DEMO_CHAT_ID) {
+      await sendMedia(process.env.DEMO_CHAT_ID, message, imageUrl)
+    }
   } catch (error) {
     console.error(error);
   }

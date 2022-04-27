@@ -3,6 +3,7 @@ import { Entity } from "telegram/define";
 import { NewMessageEvent } from "telegram/events";
 import { getParticipant } from ".";
 import add_contract from "./add_contract";
+import chat_id from "./chat_id";
 import list_contracts from "./list_contracts";
 import remove_contract from "./remove_contract";
 import start from "./start";
@@ -12,7 +13,7 @@ const roles = {
   "ChannelParticipantCreator": {}
 }
 
-const commands = ["/start", "/add_contract", "/remove_contract", "/list_contracts"]
+const commands = ["/start", "/add_contract", "/remove_contract", "/list_contracts", "/chat_id"]
 
 async function isAdmin(chat: Entity, message: Api.Message) {
   const sender = await message.getSender()
@@ -44,6 +45,9 @@ async function handleEvent(event: NewMessageEvent) {
       break;
     case commands[3]:
       await list_contracts(chat);
+      break;
+    case commands[4]:
+      await chat_id(chat);
       break;
     default:
       break;

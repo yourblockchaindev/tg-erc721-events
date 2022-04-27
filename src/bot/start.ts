@@ -11,6 +11,7 @@ async function start(chat: Entity) {
       `- /add_contract address chain`,
       `- /remove_contract address chain`,
       `- /list_contracts`,
+      `- /chat_id`,
       '',
       'Official Group: @R3vealBotChat',
     ].join("\n")

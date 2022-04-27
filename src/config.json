@@ -5,7 +5,7 @@
       "explorerUrl": "https://cronoscan.com/",
       "coinApiId": "crypto-com-chain"
     },
-    "bsc": {
+    "bnb": {
       "rpc": "https://bsc-dataseed.binance.org",
       "explorerUrl": "https://bscscan.com/",
       "coinApiId": "binancecoin"
@@ -14,6 +14,11 @@
       "rpc": "https://cloudflare-eth.com",
       "explorerUrl": "https://etherscan.io/",
       "coinApiId": "ethereum"
+    },
+    "bnb-testnet": {
+      "rpc": "https://data-seed-prebsc-2-s1.binance.org:8545",
+      "explorerUrl": "https://testnet.bscscan.com/",
+      "coinApiId": "binancecoin"
     }
   }
 }
